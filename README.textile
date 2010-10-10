@@ -1,0 +1,10 @@
+h1. TextAid Server
+
+h2. Kudos to:
+
+* TextAid: https://chrome.google.com/extensions/detail/ppoadiihggafnhokfkpphojggcdigllp
+* frodwith: http://gist.github.com/367752
+
+h2. ToDo:
+
+* lots
