@@ -1,4 +1,4 @@
-EDITOR_CMD = '/opt/local/bin/mvim --remote-tab-wait-silent'
+EDITOR_CMD = '/opt/local/bin/mvim -c"au VimLeave * !open -a Google\ Chrome" -f'
 
 %w[rubygems rack].each {|l| require l }
 
