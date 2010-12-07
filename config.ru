@@ -1,36 +1,15 @@
-EDITOR_CMD = '/opt/local/bin/mvim -c"au VimLeave * !open -a Google\ Chrome" -f'
+%w[rubygems sinatra text-aid-server].each {|l| require l }
 
-%w[rubygems rack].each {|l| require l }
+root_dir = File.dirname(__FILE__)
 
-class TextAidServer
-  def call(env)
-    case env["REQUEST_METHOD"]
-    when "GET"
-      [
-        200,
-        { 'Content-Type' => 'text/plain' },
-        <<STR
-Server is up and running.  To use it, issue a POST request with the file to edit as the content body.
+set :environment, :production
+set :root,  root_dir
+set :app_file, File.join(root_dir, 'text-aid-server.rb')
+disable :run
 
-{
-#{env.keys.collect {|k| "  \"#{k}\" => #{env[k].inspect}" }.join("\n")}
-}
-STR
-      ]
-    when "POST"
-      tempfile = Tempfile.new("text-aid-server")
-      tempfile.print env["rack.input"].read
-      tempfile.flush
-      `#{EDITOR_CMD} #{tempfile.path}`
-      tempfile.open
-      body = tempfile.read.chomp
-      tempfile.close!
-      [200, { 'Content-Type' => 'text/plain' }, body]
-    end
-  end
+FileUtils.mkdir_p 'log' unless File.exists?('log')
+log = File.new("log/sinatra.log", "a")
+$stdout.reopen(log)
+$stderr.reopen(log)
 
-end
-
-run TextAidServer.new
-
-# vim: set filetype=ruby:
+run Sinatra::Application
